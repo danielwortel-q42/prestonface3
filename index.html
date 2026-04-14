@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrestonFace 3 — Forge Your Legend</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #d4a843;
+      --gold-light: #f0d78c;
+      --fire: #e8541e;
+      --fire-glow: #ff6a2f;
+      --dark: #0a0a0f;
+      --dark-card: #12121a;
+      --dark-surface: #1a1a25;
+      --text: #c8c8d0;
+      --text-muted: #7a7a8a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(10,10,15,0.95), transparent);
+      transition: background 0.3s;
+    }
+    nav.scrolled { background: rgba(10,10,15,0.97); backdrop-filter: blur(10px); }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--fire); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('screens/screen1.jpeg') center/cover no-repeat;
+      filter: brightness(0.3) saturate(1.3);
+      transform: scale(1.05);
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center, transparent 30%, var(--dark) 80%),
+        linear-gradient(to bottom, transparent 50%, var(--dark) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border: 1px solid var(--gold);
+      border-radius: 2px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      animation: fadeInDown 1s ease-out;
+    }
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1.05;
+      color: #fff;
+      text-shadow: 0 0 60px rgba(212,168,67,0.3);
+      animation: fadeInUp 1s ease-out 0.2s both;
+    }
+    .hero h1 .accent { color: var(--gold); }
+    .hero h1 .fire { color: var(--fire-glow); }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-top: 1.5rem;
+      max-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 1s ease-out 0.4s both;
+    }
+    .hero-actions {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 1s ease-out 0.6s both;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--fire), #c0391a);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232,84,30,0.4);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2.5rem;
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover {
+      background: rgba(212,168,67,0.1);
+      color: var(--gold-light);
+    }
+    .hero-stats {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      margin-top: 4rem;
+      animation: fadeInUp 1s ease-out 0.8s both;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .number {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--gold);
+    }
+    .hero-stat .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--fire);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #fff;
+      line-height: 1.15;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-top: 1rem;
+      max-width: 600px;
+    }
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 1.5rem 0 0;
+    }
+
+    /* ── FEATURES ── */
+    .features { background: var(--dark); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--dark-card);
+      border: 1px solid rgba(212,168,67,0.08);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feature-card:hover {
+      border-color: rgba(212,168,67,0.25);
+      transform: translateY(-4px);
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .feature-card h3 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots { background: var(--dark-surface); }
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .screenshot-item {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(212,168,67,0.08);
+      aspect-ratio: 16/9;
+      cursor: pointer;
+    }
+    .screenshot-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .screenshot-item:hover img { transform: scale(1.05); }
+    .screenshot-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,15,0.6), transparent 50%);
+      pointer-events: none;
+    }
+    .screenshot-caption {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      z-index: 2;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    /* ── SELF-HOST ── */
+    .selfhost { background: var(--dark); }
+    .selfhost-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+    .selfhost-text p {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      line-height: 1.8;
+    }
+    .selfhost-steps {
+      list-style: none;
+      counter-reset: steps;
+    }
+    .selfhost-steps li {
+      counter-increment: steps;
+      padding: 1rem 1rem 1rem 3.5rem;
+      position: relative;
+      border-left: 1px solid rgba(212,168,67,0.15);
+      margin-bottom: 0.5rem;
+    }
+    .selfhost-steps li::before {
+      content: counter(steps);
+      position: absolute;
+      left: -14px;
+      top: 1rem;
+      width: 28px;
+      height: 28px;
+      background: var(--dark);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .selfhost-steps li strong {
+      color: #fff;
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .selfhost-steps li span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .terminal-block {
+      background: #0d0d14;
+      border: 1px solid rgba(212,168,67,0.1);
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 2;
+      color: var(--text);
+      overflow-x: auto;
+    }
+    .terminal-block .prompt { color: var(--gold); }
+    .terminal-block .comment { color: var(--text-muted); }
+    .terminal-block .cmd { color: #6fdb6f; }
+
+    /* ── SPECS ── */
+    .specs { background: var(--dark-surface); }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .spec-card {
+      background: var(--dark-card);
+      border: 1px solid rgba(212,168,67,0.08);
+      padding: 2rem;
+    }
+    .spec-card h3 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(212,168,67,0.1);
+    }
+    .spec-card ul {
+      list-style: none;
+    }
+    .spec-card li {
+      font-size: 0.85rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .spec-card li .label { color: var(--text-muted); }
+    .spec-card li .value { color: #fff; font-weight: 500; }
+
+    /* ── CTA ── */
+    .cta {
+      background: var(--dark);
+      text-align: center;
+      padding: 8rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(232,84,30,0.08), transparent 70%);
+    }
+    .cta .container { position: relative; z-index: 2; }
+    .cta h2 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .cta p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #08080d;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(212,168,67,0.06);
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer-logo span { color: var(--fire); }
+    footer p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-stats { gap: 1.5rem; }
+      .hero-stat .number { font-size: 1.5rem; }
+      .selfhost-content { grid-template-columns: 1fr; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .screenshots-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-logo">Preston<span>Face</span> III</div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#hosting">Self-Host</a></li>
+      <li><a href="#specs">Specs</a></li>
+      <li><a href="404.html" class="btn-secondary" style="padding:0.5rem 1.2rem;font-size:0.7rem;border:1px solid var(--gold);clip-path:none;">Download Server</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Chapter III &mdash; Out Now</div>
+      <h1><span class="accent">Preston</span><span class="fire">Face</span> 3</h1>
+      <p>The community-driven action RPG returns. Host your own server. Forge your own rules. Burn everything else.</p>
+      <div class="hero-actions">
+        <a href="404.html" class="btn-primary">Download Server Kit</a>
+        <a href="#gallery" class="btn-secondary">View Screenshots</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="number">12</div>
+        <div class="label">Playable Classes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">6</div>
+        <div class="label">Act Campaign</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">200+</div>
+        <div class="label">Community Servers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label reveal">Core Systems</div>
+      <h2 class="section-title reveal">Built for Chaos, <br>Designed for Glory</h2>
+      <div class="divider reveal"></div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#9876;</div>
+          <h3>Party Raid System</h3>
+          <p>Squad up with 3 to 8 players and take on world bosses with dynamic scaling difficulty. Coordinate through real-time party chat and shared loot tables.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#9881;</div>
+          <h3>Self-Hosted Servers</h3>
+          <p>Run your own dedicated server on any machine. Full admin panel, custom rulesets, mod support, and whitelist control. Your world, your rules.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#128293;</div>
+          <h3>Elemental Combat</h3>
+          <p>Chain fire, ice, lightning, and arcane abilities across 12 unique classes. Every spell combo triggers different synergy effects in real-time.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#127968;</div>
+          <h3>Guild Strongholds</h3>
+          <p>Build, upgrade, and defend your guild base. Shared stash, crafting stations, and a war table for planning your next raid or PvP campaign.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#128225;</div>
+          <h3>Runic Skill Trees</h3>
+          <p>Slot demonic runes into branching skill paths. Over 340 unique rune combinations let you craft a build that's truly yours.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">&#127760;</div>
+          <h3>Cross-Server Events</h3>
+          <p>Join limited-time global events that link community servers together. Compete for seasonal leaderboards and exclusive cosmetic drops.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section class="screenshots" id="gallery">
+    <div class="container">
+      <div class="section-label reveal">Gallery</div>
+      <h2 class="section-title reveal">Forged in Flame</h2>
+      <div class="divider reveal"></div>
+      <div class="screenshots-grid reveal">
+        <div class="screenshot-item">
+          <img src="screens/screen1.jpeg" alt="Boss raid — Malakar the Doomlord">
+          <div class="screenshot-caption">Raid: Malakar the Doomlord</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="screens/screen2.jpeg" alt="Party combat with spell combos">
+          <div class="screenshot-caption">Coordinated Party Strike</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="screens/screen3.jpeg" alt="Desert hub with NPCs and waypoint">
+          <div class="screenshot-caption">Oriath Sands &mdash; Social Hub</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="screens/screen4.jpeg" alt="Close combat mage battle">
+          <div class="screenshot-caption">Mage DPS &mdash; Inferno Build</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELF-HOST -->
+  <section class="selfhost" id="hosting">
+    <div class="container">
+      <div class="section-label reveal">Your Server, Your Rules</div>
+      <h2 class="section-title reveal">Host It Yourself</h2>
+      <div class="divider reveal"></div>
+      <div class="selfhost-content reveal">
+        <div class="selfhost-text">
+          <p>PrestonFace 3 was built from the ground up for community hosting. No subscriptions, no always-online DRM. Download the server kit, configure your world, and invite your friends.</p>
+          <p>Every server owner gets access to the full admin toolkit: spawn rates, loot tables, PvP zones, XP curves, boss scaling, and cosmetic overrides. Run a hardcore permadeath server or a casual loot-fest &mdash; it's entirely up to you.</p>
+          <p>The server binary runs on <strong>Windows, Linux, and macOS</strong>. Typical hardware: any machine with 4+ cores, 8 GB RAM, and a decent internet connection handles 30 players without breaking a sweat.</p>
+        </div>
+        <div>
+          <div class="terminal-block">
+            <span class="comment"># Download &amp; extract the server kit</span><br>
+            <span class="prompt">$</span> <span class="cmd">curl -O https://prestonface3.gg/server/pf3-server-latest.tar.gz</span><br>
+            <span class="prompt">$</span> <span class="cmd">tar -xzf pf3-server-latest.tar.gz</span><br>
+            <span class="prompt">$</span> <span class="cmd">cd pf3-server/</span><br><br>
+            <span class="comment"># Configure your world</span><br>
+            <span class="prompt">$</span> <span class="cmd">cp config.example.yml config.yml</span><br>
+            <span class="prompt">$</span> <span class="cmd">nano config.yml</span><br><br>
+            <span class="comment"># Launch</span><br>
+            <span class="prompt">$</span> <span class="cmd">./pf3-server --start</span><br>
+            <span style="color:#6fdb6f;">[PF3] Server started on port 7777</span><br>
+            <span style="color:#6fdb6f;">[PF3] World "Ashfall Realm" loaded (seed: 48291)</span><br>
+            <span style="color:#6fdb6f;">[PF3] Waiting for adventurers...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section class="specs" id="specs">
+    <div class="container">
+      <div class="section-label reveal">Requirements</div>
+      <h2 class="section-title reveal">System Specs</h2>
+      <div class="divider reveal"></div>
+      <div class="specs-grid reveal">
+        <div class="spec-card">
+          <h3>Client &mdash; Minimum</h3>
+          <ul>
+            <li><span class="label">OS</span><span class="value">Windows 10 / macOS 12</span></li>
+            <li><span class="label">CPU</span><span class="value">Intel i5-8400</span></li>
+            <li><span class="label">RAM</span><span class="value">8 GB</span></li>
+            <li><span class="label">GPU</span><span class="value">GTX 1060 6GB</span></li>
+            <li><span class="label">Storage</span><span class="value">25 GB SSD</span></li>
+            <li><span class="label">Network</span><span class="value">10 Mbps</span></li>
+          </ul>
+        </div>
+        <div class="spec-card">
+          <h3>Client &mdash; Recommended</h3>
+          <ul>
+            <li><span class="label">OS</span><span class="value">Windows 11 / macOS 14</span></li>
+            <li><span class="label">CPU</span><span class="value">Intel i7-12700 / M2</span></li>
+            <li><span class="label">RAM</span><span class="value">16 GB</span></li>
+            <li><span class="label">GPU</span><span class="value">RTX 3070</span></li>
+            <li><span class="label">Storage</span><span class="value">25 GB NVMe</span></li>
+            <li><span class="label">Network</span><span class="value">25 Mbps</span></li>
+          </ul>
+        </div>
+        <div class="spec-card">
+          <h3>Server</h3>
+          <ul>
+            <li><span class="label">OS</span><span class="value">Win / Linux / macOS</span></li>
+            <li><span class="label">CPU</span><span class="value">4+ cores</span></li>
+            <li><span class="label">RAM</span><span class="value">8 GB</span></li>
+            <li><span class="label">Storage</span><span class="value">10 GB</span></li>
+            <li><span class="label">Network</span><span class="value">50 Mbps up</span></li>
+            <li><span class="label">Capacity</span><span class="value">~30 players</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="download">
+    <div class="container">
+      <div class="section-label reveal">Ready?</div>
+      <h2 class="reveal">Forge Your Legend</h2>
+      <p class="reveal">Download the server kit. Invite your party. The Doomlord awaits.</p>
+      <div class="reveal">
+        <a href="404.html" class="btn-primary">Download v3.2.1 &mdash; Free</a>
+      </div>
+      <p class="reveal" style="font-size:0.75rem;margin-top:1.5rem;color:var(--text-muted);">v3.2.1 &bull; 2.4 GB &bull; Windows / Linux / macOS &bull; Released April 2026</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Preston<span>Face</span> III</div>
+    <p>&copy; 2026 PrestonFace Studios. All rights reserved. All demons vanquished (eventually).</p>
+    <ul class="footer-links">
+      <li><a href="404.html">Discord</a></li>
+      <li><a href="404.html">Wiki</a></li>
+      <li><a href="404.html">Patch Notes</a></li>
+      <li><a href="404.html">Server Browser</a></li>
+      <li><a href="404.html">Bug Tracker</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // Scroll-triggered reveals
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav background on scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+
+</body>
+</html>
