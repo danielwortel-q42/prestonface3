@@ -152,6 +152,31 @@
       color: var(--muted);
       line-height: 1.7;
     }
+    .prank-copy {
+      margin-top: 1.5rem;
+      padding: 1.6rem 1.5rem;
+      border-radius: 22px;
+      background: rgba(24, 30, 50, 0.88);
+      border: 1px solid rgba(212,168,67,0.16);
+      color: #f4f4f8;
+      line-height: 1.8;
+    }
+    .prank-copy p,
+    .prank-copy strong,
+    .prank-copy em {
+      margin: 0.85rem 0;
+      color: var(--text);
+    }
+    .prank-copy p:first-child {
+      margin-top: 0;
+    }
+    .prank-copy h3 {
+      margin: 1rem 0 0.5rem;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
     .confetti-container {
       position: fixed;
       inset: 0;
@@ -215,6 +240,24 @@
         <p>Congratulations! You are now officially part of the prank. 🎉 Note: do not share this code with anyone.</p>
         <p>After all that effort, you have finally unmasked the myth!</p>
       </div>
+      <div class="prank-copy" id="prankCopy" style="display:none;">
+        <p>🎉 <strong>YOU'VE BEEN PRANKED!</strong> 🎉</p>
+        <p>Congratulations, you magnificent detective, you.</p>
+        <p>After all that squinting at screens, furious Googling, and probably asking at least one colleague a suspiciously casual question — you cracked it.</p>
+        <p>You found the thing that wasn't supposed to be found. Or maybe it found you. Either way, here we are.</p>
+        <p>🏆 Welcome to The Order of the Unmasked.</p>
+        <p>This is a sacred and ancient tradition — well, as sacred and ancient as a workplace prank can be — passed down from new hire to new hire, year after year, like a cursed heirloom that everyone secretly loves.</p>
+        <p>Every single person who sits where you're sitting right now had the exact same look on their face that you have right now. That beautiful cocktail of confusion, pride, and “wait... seriously?”</p>
+        <h3>📜 The Rules Are Simple:</h3>
+        <p>You say nothing. Lips sealed. Vault locked. Key thrown into the sea.</p>
+        <p>You watch. The next new person will come along, bright-eyed and curious, and you will smile knowingly from across the room.</p>
+        <p>You wait. And when they crack it? You welcome them in, just as you were welcomed.</p>
+        <h3>🤫 Because here's the thing...</h3>
+        <p>The prank was never really about the trick.</p>
+        <p>It's about finding out what kind of person you are — are you the type who digs deeper? Who questions things? Who doesn't just accept the surface?</p>
+        <p>Turns out... you are. And that's exactly the kind of person we want around here.</p>
+        <p>Now go act normal. Someone's watching. 😏</p>
+      </div>
     </div>
   </div>
   <div class="confetti-container" id="confetti"></div>
@@ -230,8 +273,10 @@
     const heroTitle = document.getElementById('heroTitle');
     const heroSubtitle = document.getElementById('heroSubtitle');
     const confettiRoot = document.getElementById('confetti');
+    const prankCopy = document.getElementById('prankCopy');
 
     function showLocked(messageText) {
+      prankCopy.style.display = 'none';
       successPanel.style.display = 'none';
       form.style.display = 'grid';
       heroTitle.textContent = 'Restricted Download Page';
@@ -244,8 +289,9 @@
     function showUnlocked() {
       form.style.display = 'none';
       successPanel.style.display = 'block';
-      heroTitle.textContent = 'Access Granted';
-      heroSubtitle.textContent = 'Confetti is activated — welcome to the prank reveal!';
+      prankCopy.style.display = 'block';
+      heroTitle.textContent = "You've been pranked";
+      heroSubtitle.textContent = '';
       error.textContent = '';
       launchConfetti();
     }
