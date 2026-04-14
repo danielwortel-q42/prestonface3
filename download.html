@@ -157,23 +157,26 @@
       inset: 0;
       pointer-events: none;
       overflow: hidden;
-      z-index: 0;
+      z-index: 10;
     }
     .confetti {
       position: absolute;
-      top: -10px;
       width: 10px;
-      height: 18px;
+      height: 16px;
       opacity: 0.95;
       border-radius: 3px;
-      animation: fall linear infinite, spin 1.2s ease-in-out infinite;
+      transform-origin: center;
+      animation: confetti-fall forwards ease-out;
     }
-    @keyframes fall {
-      to { transform: translateY(110vh); opacity: 0; }
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @keyframes confetti-fall {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(var(--x, 0), 110vh, 0) rotate(var(--rotate, 720deg));
+        opacity: 0;
+      }
     }
     @media (max-width: 680px) {
       .card { padding: 1.5rem; }
@@ -243,17 +246,22 @@
     }
 
     function launchConfetti() {
-      for (let i = 0; i < 90; i++) {
+      confettiRoot.innerHTML = '';
+      for (let i = 0; i < 120; i++) {
         const piece = document.createElement('span');
         piece.className = 'confetti';
-        const colorHue = 45 + Math.floor(Math.random() * 60);
-        piece.style.background = `hsl(${colorHue}, 100%, 60%)`;
-        piece.style.left = `${Math.random() * 100}%`;
-        piece.style.width = `${8 + Math.random() * 6}px`;
-        piece.style.height = `${14 + Math.random() * 10}px`;
-        piece.style.animationDuration = `${2.2 + Math.random() * 1.4}s`;
-        piece.style.animationDelay = `${Math.random() * 0.8}s`;
-        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        const colorHue = 20 + Math.floor(Math.random() * 120);
+        piece.style.background = `hsl(${colorHue}, 95%, 60%)`;
+        piece.style.left = `${45 + Math.random() * 10}%`;
+        piece.style.top = `${10 + Math.random() * 8}%`;
+        piece.style.width = `${6 + Math.random() * 10}px`;
+        piece.style.height = `${8 + Math.random() * 12}px`;
+        const drift = Math.random() * 240 - 120;
+        const rotate = 360 + Math.random() * 360;
+        piece.style.setProperty('--x', `${drift}px`);
+        piece.style.setProperty('--rotate', `${rotate}deg`);
+        piece.style.animationDuration = `${1.2 + Math.random() * 0.9}s`;
+        piece.style.animationDelay = `${Math.random() * 0.15}s`;
         confettiRoot.appendChild(piece);
         piece.addEventListener('animationend', () => piece.remove());
       }
