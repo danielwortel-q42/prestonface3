@@ -184,6 +184,57 @@
       background: rgba(212,168,67,0.1);
       color: var(--gold-light);
     }
+    .invite-card {
+      margin: 2rem auto 0;
+      padding: 1.75rem 1.5rem;
+      max-width: 700px;
+      background: rgba(12, 12, 18, 0.85);
+      border: 1px solid rgba(212,168,67,0.25);
+      border-radius: 24px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.35);
+      animation: fadeInUp 1s ease-out 0.8s both;
+      text-align: left;
+    }
+    .invite-card h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .invite-card p {
+      margin-bottom: 1rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .invite-form {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .invite-input {
+      flex: 1 1 280px;
+      min-width: 200px;
+      padding: 0.95rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(212,168,67,0.3);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .invite-input::placeholder { color: rgba(255,255,255,0.6); }
+    .invite-note {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .invite-error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      min-height: 20px;
+    }
     .hero-stats {
       position: relative;
       z-index: 2;
@@ -542,7 +593,7 @@
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#hosting">Self-Host</a></li>
       <li><a href="#specs">Specs</a></li>
-      <li><a href="404.html" class="btn-secondary" style="padding:0.5rem 1.2rem;font-size:0.7rem;border:1px solid var(--gold);clip-path:none;">Download Server</a></li>
+      <li><a href="download.html" class="btn-secondary" style="padding:0.5rem 1.2rem;font-size:0.7rem;border:1px solid var(--gold);clip-path:none;">Download Server</a></li>
     </ul>
   </nav>
 
@@ -555,8 +606,18 @@
       <h1><span class="accent">Preston</span><span class="fire">Face</span> 3</h1>
       <p>The community-driven action RPG returns. Host your own server. Forge your own rules. Burn everything else.</p>
       <div class="hero-actions">
-        <a href="404.html" class="btn-primary">Download Server Kit</a>
+        <a href="download.html" class="btn-primary">Download Server Kit</a>
         <a href="#gallery" class="btn-secondary">View Screenshots</a>
+      </div>
+      <div class="invite-card reveal">
+        <h2>Invite Only</h2>
+        <p>Enter your referral code here to unlock the restricted download page.</p>
+        <form id="inviteForm" class="invite-form">
+          <input id="inviteCode" class="invite-input" type="text" placeholder="Enter your referral code here" aria-label="Referral code" />
+          <button type="submit" class="btn-primary">Unlock Access</button>
+        </form>
+        <div class="invite-error" id="inviteError" aria-live="polite"></div>
+        <p class="invite-note">Have an invite URL? Use <code>download.html?code=EXIMIA-INVITE</code>.</p>
       </div>
     </div>
     <div class="hero-stats">
@@ -726,7 +787,7 @@
       <h2 class="reveal">Forge Your Legend</h2>
       <p class="reveal">Download the server kit. Invite your party. The Doomlord awaits.</p>
       <div class="reveal">
-        <a href="404.html" class="btn-primary">Download v3.2.1 &mdash; Free</a>
+        <a href="download.html" class="btn-primary">Download v3.2.1 &mdash; Free</a>
       </div>
       <p class="reveal" style="font-size:0.75rem;margin-top:1.5rem;color:var(--text-muted);">v3.2.1 &bull; 2.4 GB &bull; Windows / Linux / macOS &bull; Released April 2026</p>
     </div>
@@ -750,6 +811,25 @@
       });
     }, { threshold: 0.15 });
     reveals.forEach(el => observer.observe(el));
+
+    const inviteForm = document.getElementById('inviteForm');
+    const inviteCode = document.getElementById('inviteCode');
+    const inviteError = document.getElementById('inviteError');
+    const REFERRAL_CODE = 'EXIMIA-INVITE';
+
+    inviteForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const code = inviteCode.value.trim().toUpperCase();
+      if (!code) {
+        inviteError.textContent = 'Please enter your referral code.';
+        return;
+      }
+      if (code !== REFERRAL_CODE) {
+        inviteError.textContent = 'Invalid referral code. Try again.';
+        return;
+      }
+      window.location.href = `download.html?code=${encodeURIComponent(code)}`;
+    });
 
     // Nav background on scroll
     const nav = document.getElementById('navbar');
