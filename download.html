@@ -232,11 +232,6 @@
         <div class="alert" id="downloadError" aria-live="polite"></div>
       </form>
 
-      <div class="success-panel" id="successPanel" style="display:none;">
-        <h2>You've been pranked!</h2>
-        <p>Congratulations! You are now officially part of the prank. 🎉 Note: do not share this code with anyone.</p>
-        <p>After all that effort, you have finally unmasked the myth!</p>
-      </div>
       <div class="prank-copy" id="prankCopy" style="display:none;">
         <p>Gefeliciteerd, jij slimme speurder.</p>
         <p>Na al dat zoeken, piekeren en waarschijnlijk op z'n minst één vriend een véél te nonchalante vraag stellen — heb jij het doorgehad.</p>
@@ -265,7 +260,6 @@
     const form = document.getElementById('downloadForm');
     const input = document.getElementById('downloadCode');
     const error = document.getElementById('downloadError');
-    const successPanel = document.getElementById('successPanel');
     const heroTitle = document.getElementById('heroTitle');
     const heroSubtitle = document.getElementById('heroSubtitle');
     const confettiRoot = document.getElementById('confetti');
@@ -273,7 +267,6 @@
 
     function showLocked(messageText) {
       prankCopy.style.display = 'none';
-      successPanel.style.display = 'none';
       form.style.display = 'grid';
       heroTitle.textContent = 'Restricted Download Page';
       heroSubtitle.textContent = 'This page is password protected. Enter your referral code to reveal the download prank.';
@@ -284,7 +277,6 @@
 
     function showUnlocked() {
       form.style.display = 'none';
-      successPanel.style.display = 'block';
       prankCopy.style.display = 'block';
       heroTitle.textContent = "You've been pranked";
       heroSubtitle.textContent = '';
