@@ -191,8 +191,8 @@
       opacity: 0.95;
       border-radius: 3px;
       transform-origin: center;
-      animation: confetti-burst forwards ease-out;
-      top: var(--start-top, 95%);
+      animation: confetti-burst forwards cubic-bezier(0.22, 1, 0.36, 1);
+      top: var(--start-top, 96%);
       left: var(--start-left, 50%);
     }
     @keyframes confetti-burst {
@@ -200,15 +200,19 @@
         transform: translate3d(0, 0, 0) rotate(0deg);
         opacity: 1;
       }
-      30% {
-        transform: translate3d(var(--x, 0), var(--y-peak, -220px), 0) rotate(calc(var(--rotate, 720deg) * 0.4));
+      25% {
+        transform: translate3d(calc(var(--x, 0) * 0.15), calc(var(--y-peak, -240px) * 0.4), 0) rotate(calc(var(--rotate, 720deg) * 0.2));
+        opacity: 1;
       }
       55% {
-        transform: translate3d(calc(var(--x, 0) * 0.75), calc(var(--y-peak, -220px) * 0.45), 0) rotate(calc(var(--rotate, 720deg) * 0.7));
+        transform: translate3d(calc(var(--x, 0) * 0.7), var(--y-peak, -240px), 0) rotate(calc(var(--rotate, 720deg) * 0.55));
         opacity: 0.95;
       }
+      85% {
+        transform: translate3d(calc(var(--x, 0) * 0.85), calc(var(--y, 320px) * 0.7), 0) rotate(calc(var(--rotate, 720deg) * 0.85));
+      }
       100% {
-        transform: translate3d(calc(var(--x, 0) * 0.5), var(--y, 260px), 0) rotate(var(--rotate, 720deg));
+        transform: translate3d(calc(var(--x, 0) * 1), var(--y, 320px), 0) rotate(var(--rotate, 720deg));
         opacity: 0;
       }
     }
@@ -302,25 +306,25 @@
 
     function launchConfetti() {
       confettiRoot.innerHTML = '';
-      for (let i = 0; i < 140; i++) {
+      for (let i = 0; i < 180; i++) {
         const piece = document.createElement('span');
         piece.className = 'confetti';
         const colorHue = 20 + Math.floor(Math.random() * 140);
         piece.style.background = `hsl(${colorHue}, 95%, 60%)`;
-        piece.style.setProperty('--start-left', `${48 + Math.random() * 4}%`);
-        piece.style.setProperty('--start-top', `${92 + Math.random() * 6}%`);
+        piece.style.setProperty('--start-left', `${48 + (Math.random() - 0.5) * 8}%`);
+        piece.style.setProperty('--start-top', `${94 + Math.random() * 4}%`);
         piece.style.width = `${6 + Math.random() * 10}px`;
         piece.style.height = `${8 + Math.random() * 12}px`;
-        const drift = Math.random() * 320 - 160;
-        const peak = -190 - Math.random() * 140;
-        const endY = 220 + Math.random() * 180;
-        const rotate = 360 + Math.random() * 540;
+        const drift = Math.random() * 520 - 260;
+        const peak = -220 - Math.random() * 180;
+        const endY = 300 + Math.random() * 220;
+        const rotate = 360 + Math.random() * 760;
         piece.style.setProperty('--x', `${drift}px`);
         piece.style.setProperty('--y-peak', `${peak}px`);
         piece.style.setProperty('--y', `${endY}px`);
         piece.style.setProperty('--rotate', `${rotate}deg`);
-        piece.style.animationDuration = `${1.6 + Math.random() * 1.2}s`;
-        piece.style.animationDelay = `${Math.random() * 0.08}s`;
+        piece.style.animationDuration = `${2.4 + Math.random() * 1.4}s`;
+        piece.style.animationDelay = `${Math.random() * 0.15}s`;
         confettiRoot.appendChild(piece);
         piece.addEventListener('animationend', () => piece.remove());
       }
