@@ -191,29 +191,23 @@
       opacity: 0.95;
       border-radius: 3px;
       transform-origin: center;
-      animation: confetti-fall forwards ease-in-out;
       top: var(--start-top, -12%);
       left: var(--start-left, 50%);
+      animation: confetti-fall 4.8s ease-in-out forwards, confetti-drift 2.4s ease-in-out infinite alternate;
     }
     @keyframes confetti-fall {
       0% {
         transform: translate3d(0, 0, 0) rotate(0deg);
         opacity: 1;
       }
-      25% {
-        transform: translate3d(calc(var(--drift, 0) * 0.25), 20vh, 0) rotate(calc(var(--rotate, 720deg) * 0.25));
-      }
-      50% {
-        transform: translate3d(calc(var(--drift, 0) * -0.15), 45vh, 0) rotate(calc(var(--rotate, 720deg) * 0.55));
-        opacity: 0.95;
-      }
-      75% {
-        transform: translate3d(calc(var(--drift, 0) * 0.18), 70vh, 0) rotate(calc(var(--rotate, 720deg) * 0.8));
-      }
       100% {
-        transform: translate3d(calc(var(--drift, 0) * 0.12), 100vh, 0) rotate(var(--rotate, 720deg));
+        transform: translate3d(var(--drift, 0), 110vh, 0) rotate(var(--rotate, 720deg));
         opacity: 0;
       }
+    }
+    @keyframes confetti-drift {
+      0% { left: var(--start-left); }
+      100% { left: calc(var(--start-left) + var(--rumble, 12px)); }
     }
     @media (max-width: 680px) {
       .card { padding: 1.5rem; }
@@ -318,8 +312,10 @@
         piece.style.height = `${8 + Math.random() * 12}px`;
         const drift = Math.round((Math.random() * 2 - 1) * maxDrift);
         const rotate = 360 + Math.random() * 760;
+        const rumble = 8 + Math.random() * 14;
         piece.style.setProperty('--drift', `${drift}px`);
         piece.style.setProperty('--rotate', `${rotate}deg`);
+        piece.style.setProperty('--rumble', `${drift > 0 ? rumble : -rumble}px`);
         piece.style.animationDuration = `${4.2 + Math.random() * 1.8}s`;
         piece.style.animationDelay = `${Math.random() * 0.8}s`;
         confettiRoot.appendChild(piece);
